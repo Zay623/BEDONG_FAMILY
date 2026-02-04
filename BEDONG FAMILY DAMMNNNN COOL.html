@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zay 的欢乐大家庭</title>
+    <style>
+        /* 这里的 CSS 负责把页面变得 colorful 和卡通 */
+        :root {
+            --bg: #FFF9EC;
+            --font-main: 'Comic Sans MS', 'Microsoft YaHei', sans-serif;
+        }
+
+        body { margin: 0; background: var(--bg); font-family: var(--font-main); scroll-behavior: smooth; }
+
+        /* --- INDEX 部分 (介绍) --- */
+        .index-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .index-page h1 { font-size: 3rem; margin: 0; text-shadow: 4px 4px 0px rgba(0,0,0,0.1); }
+        .index-page p { font-size: 1.2rem; margin: 20px 0; max-width: 500px; line-height: 1.8; }
+        
+        .start-btn {
+            background: #FF6B6B;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 5px 0 #d64545;
+            transition: 0.2s;
+        }
+        .start-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #d64545; }
+
+        /* --- FAMILY 成员列表部分 --- */
+        .family-section { padding: 40px 15px; min-height: 100vh; }
+        .section-title { text-align: center; color: #FF6B6B; margin-bottom: 30px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border: 3px solid #FFD93D;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        .card:hover { transform: scale(1.05) rotate(2deg); }
+        .card-emoji { font-size: 50px; display: block; margin-bottom: 10px; }
+        .card-name { font-weight: bold; font-size: 1.1rem; color: #444; }
+
+        /* --- 详情弹窗 --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            width: 85%;
+            max-width: 400px;
+            border-radius: 30px;
+            padding: 25px;
+            border: 6px solid #6BCB77;
+            position: relative;
+        }
+        .close { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #ccc; }
+        
+        .info-box { margin-top: 20px; }
+        .info-item { margin: 10px 0; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
+        .info-item label { color: #6BCB77; font-weight: bold; font-size: 0.9rem; }
+        .info-item p { margin: 5px 0 0; color: #555; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+    <div class="index-page">
+        <h1>🏡 This is our Bedong Family Group</h1>
+        <p>这是专门为我们大家庭设计的网站！这里记录了我们 30 位成员的性格、秘密和超能力。准备好认识他们了吗？</p>
+        <a href="#family" class="start-btn">点击进入 🚀</a>
+    </div>
+
+    <div class="family-section" id="family">
+        <h2 class="section-title">✨ 我们的 30 位成员 ✨</h2>
+        <div class="grid" id="memberGrid">
+            </div>
+    </div>
+
+    <div class="modal" id="myModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // 这里是 30 个人的数据，Zay 你可以直接在这里修改文字
+        const family = [
+            { name: "阿公", birth: "1945年", feature: "长胡子", personality: "老顽童", power: "讲故事", hobby: "饮茶", motto: "平安是福" },
+            { name: "阿嬷", birth: "1948年", feature: "爱笑", personality: "慈祥", power: "做美食", hobby: "种花", motto: "吃饭了吗？" },
+            // 你可以按照这个格式继续写到 30 个...
+        ];
+
+        // 如果 family 数组不满 30，我用下面的循环帮你补齐，方便你看效果
+        for(let i = family.length + 1; i <= 30; i++) {
+            family.push({
+                name: "家庭成员 " + i,
+                birth: "2026年",
+                feature: "待填写",
+                personality: "待填写",
+                power: "神秘力量",
+                hobby: "保密",
+                motto: "生活愉快！"
+            });
+        }
+
+        const grid = document.getElementById('memberGrid');
+        const colors = ['#FF6B6B', '#4ECDC4', '#FFD93D', '#6BCB77', '#A29BFE', '#FF85A2'];
+
+        // 生成卡片
+        family.forEach((person, index) => {
+            const color = colors[index % colors.length];
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.style.borderColor = color;
+            div.innerHTML = `
+                <span class="card-emoji">👤</span>
+                <div class="card-name">${person.name}</div>
+            `;
+            div.onclick = () => openModal(person, color);
+            grid.appendChild(div);
+        });
+
+        function openModal(p, color) {
+            const modal = document.getElementById('myModal');
+            const body = document.getElementById('modalBody');
+            modal.children[0].style.borderColor = color;
+            body.innerHTML = `
+                <div style="font-size:60px; text-align:center">👤</div>
+                <h2 style="text-align:center; color:${color}">${p.name}</h2>
+                <div class="info-box">
+                    <div class="info-item"><label>📅 出生日期</label><p>${p.birth}</p></div>
+                    <div class="info-item"><label>🌟 特征</label><p>${p.feature}</p></div>
+                    <div class="info-item"><label>🧠 性格</label><p>${p.personality}</p></div>
+                    <div class="info-item"><label>⚡ 超能力</label><p>${p.power}</p></div>
+                    <div class="info-item"><label>🎨 爱好</label><p>${p.hobby}</p></div>
+                    <div class="info-item"><label>💬 座右铭</label><p>"${p.motto}"</p></div>
+                </div>
+            `;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('myModal').style.display = 'none'; }
+        window.onclick = (e) => { if(e.target.id == 'myModal') closeModal(); }
+    </script>
+</body>
+</html>
