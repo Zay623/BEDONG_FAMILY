@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zay 的欢乐大家庭</title>
+    <title>Bedong Family Group</title>
     <style>
-        /* 这里的 CSS 负责把页面变得 colorful 和卡通 */
         :root {
             --bg: #FFF9EC;
             --font-main: 'Comic Sans MS', 'Microsoft YaHei', sans-serif;
+            --accent: #FF6B6B;
         }
 
-        body { margin: 0; background: var(--bg); font-family: var(--font-main); scroll-behavior: smooth; }
+        body { margin: 0; background: var(--bg); font-family: var(--font-main); scroll-behavior: smooth; overflow-x: hidden; }
 
-        /* --- INDEX 部分 (介绍) --- */
+        /* --- INDEX 部分 --- */
         .index-page {
             height: 100vh;
             display: flex;
@@ -25,87 +25,80 @@
             text-align: center;
             padding: 20px;
         }
-
-        .index-page h1 { font-size: 3rem; margin: 0; text-shadow: 4px 4px 0px rgba(0,0,0,0.1); }
-        .index-page p { font-size: 1.2rem; margin: 20px 0; max-width: 500px; line-height: 1.8; }
-        
+        .index-page h1 { font-size: 2.5rem; margin: 0; text-shadow: 3px 3px 0px rgba(0,0,0,0.1); }
         .start-btn {
-            background: #FF6B6B;
-            color: white;
-            padding: 15px 40px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
-            box-shadow: 0 5px 0 #d64545;
-            transition: 0.2s;
+            margin-top: 30px; background: var(--accent); color: white;
+            padding: 15px 40px; border-radius: 50px; text-decoration: none;
+            font-weight: bold; box-shadow: 0 5px 0 #d64545; transition: 0.2s;
         }
         .start-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #d64545; }
 
-        /* --- FAMILY 成员列表部分 --- */
-        .family-section { padding: 40px 15px; min-height: 100vh; }
-        .section-title { text-align: center; color: #FF6B6B; margin-bottom: 30px; }
-
+        /* --- FAMILY 列表 --- */
+        .family-section { padding: 40px 15px; }
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
             max-width: 1000px;
             margin: 0 auto;
         }
 
+        /* 卡片样式 */
         .card {
             background: white;
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 25px;
+            padding: 15px;
             text-align: center;
-            border: 3px solid #FFD93D;
+            border: 4px solid #FFD93D;
             transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer;
         }
-        .card:hover { transform: scale(1.05) rotate(2deg); }
-        .card-emoji { font-size: 50px; display: block; margin-bottom: 10px; }
-        .card-name { font-weight: bold; font-size: 1.1rem; color: #444; }
+        .card:hover { transform: translateY(-10px) rotate(2deg); }
+        
+        /* 卡片照片 */
+        .card-img {
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #eee;
+            margin-bottom: 10px;
+            background: #fdfdfd;
+        }
+        .card-name { font-weight: bold; font-size: 1.2rem; color: #444; }
 
-        /* --- 详情弹窗 --- */
+        /* --- 弹窗 --- */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(8px);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+            z-index: 100; justify-content: center; align-items: center;
         }
         .modal-content {
-            background: white;
-            width: 85%;
-            max-width: 400px;
-            border-radius: 30px;
-            padding: 25px;
-            border: 6px solid #6BCB77;
-            position: relative;
+            background: white; width: 85%; max-width: 350px;
+            border-radius: 35px; padding: 25px; border: 6px solid #6BCB77;
+            position: relative; text-align: center;
         }
-        .close { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #ccc; }
+        .modal-img {
+            width: 150px; height: 150px; border-radius: 30px;
+            object-fit: cover; margin-bottom: 15px; border: 4px solid #f0f0f0;
+        }
+        .close { position: absolute; right: 20px; top: 15px; font-size: 30px; cursor: pointer; color: #ccc; }
         
-        .info-box { margin-top: 20px; }
-        .info-item { margin: 10px 0; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
-        .info-item label { color: #6BCB77; font-weight: bold; font-size: 0.9rem; }
-        .info-item p { margin: 5px 0 0; color: #555; font-size: 1.1rem; }
+        .info-box { text-align: left; margin-top: 15px; }
+        .info-item { margin: 12px 0; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
+        .info-item label { color: var(--accent); font-weight: bold; font-size: 0.8rem; display: block; }
+        .info-item p { margin: 3px 0 0; color: #555; font-size: 1.05rem; }
     </style>
 </head>
 <body>
 
     <div class="index-page">
         <h1>🏡 This is our Bedong Family Group</h1>
-        <p>这是专门为我们大家庭设计的网站！这里记录了我们 30 位成员的性格、秘密和超能力。准备好认识他们了吗？</p>
-        <a href="#family" class="start-btn">点击进入 🚀</a>
+        <p>30 位家庭成员的独家记录</p>
+        <a href="#family" class="start-btn">点击开启 🚀</a>
     </div>
 
     <div class="family-section" id="family">
-        <h2 class="section-title">✨ 我们的 30 位成员 ✨</h2>
-        <div class="grid" id="memberGrid">
-            </div>
+        <div class="grid" id="memberGrid"></div>
     </div>
 
     <div class="modal" id="myModal">
@@ -116,57 +109,89 @@
     </div>
 
     <script>
-        // 这里是 30 个人的数据，Zay 你可以直接在这里修改文字
+        // Zay，在这里修改资料和照片路径
+        // 如果没有照片，photo 留空或写一个不存在的名字，它会自动显示默认头像
         const family = [
-            { name: "阿公", birth: "1945年", feature: "长胡子", personality: "老顽童", power: "讲故事", hobby: "饮茶", motto: "平安是福" },
-            { name: "阿嬷", birth: "1948年", feature: "爱笑", personality: "慈祥", power: "做美食", hobby: "种花", motto: "吃饭了吗？" },
-            // 你可以按照这个格式继续写到 30 个...
+            { name: "阿公", position: "刘亚龙", birth: "5/2/1942", personality: "喜欢吃capati", motto: "5点了吗", photo: "agong.jpg" },
+            { name: "阿嬷", position: "林清萍", birth: "10/9/1946", personality: "有着惊人的默契", motto: "吃饭了吗？", photo: "ama.jpg" },
+            { name: "二姨", position: "刘若戴", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "大舅", position: "刘承佑", birth: "2/11/1972", personality: "酒量惊人", motto: "哈?", photo: "zay.jpg" },
+            { name: "三姨", position: "刘若坤", birth: "11/10/1977", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "四姨", position: "刘若素", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "五姨", position: "刘彩辉", birth: "11/10/1977", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "小姨", position: "刘彩芝", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "舅舅", position: "刘承xia", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "二姨丈", position: "刘展", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "阿Kim", position: "谢如意", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "三姨丈", position: "刘若戴", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "四姨丈", position: "刘若戴", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "五姨丈", position: "陈huanren", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "小姨丈", position: "猫", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+
+            { name: "阿齐", position: "刘珈齐", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "阿宏", position: "刘展鸿", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "Jolene", position: "刘若戴", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "熙雯", position: "陈熙雯", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "阿玮", position: "刘珈齐", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "阿翔", position: "陈威翔", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "Janice", position: "刘若戴", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "阿喆", position: "陈威喆", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "阿妹", position: "陈熙颖", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "Jaden", position: "刘若戴", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "阿珉", position: "刘珈珉", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "Venus", position: "刘若戴", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "Ethan", position: "刘若戴", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "阿Belle", position: "刘静涵", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+            { name: "家家", position: "刘维家", birth: "11/10/1971", personality: "自带喇叭", motto: "阿齐！阿玮！阿珉！", photo: "zay.jpg" },
+
         ];
 
-        // 如果 family 数组不满 30，我用下面的循环帮你补齐，方便你看效果
+        // 补齐到 30 个
         for(let i = family.length + 1; i <= 30; i++) {
             family.push({
                 name: "家庭成员 " + i,
-                birth: "2026年",
-                feature: "待填写",
+                position: "成员",
+                birth: "待填写",
                 personality: "待填写",
-                power: "神秘力量",
-                hobby: "保密",
-                motto: "生活愉快！"
+                motto: "生活愉快！",
+                photo: "" 
             });
         }
 
         const grid = document.getElementById('memberGrid');
         const colors = ['#FF6B6B', '#4ECDC4', '#FFD93D', '#6BCB77', '#A29BFE', '#FF85A2'];
+        const defaultImg = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"; // 默认头像
 
-        // 生成卡片
         family.forEach((person, index) => {
             const color = colors[index % colors.length];
             const div = document.createElement('div');
             div.className = 'card';
             div.style.borderColor = color;
+            
+            // 处理照片：如果有就用，没有就用默认
+            const imgSrc = person.photo ? person.photo : defaultImg;
+
             div.innerHTML = `
-                <span class="card-emoji">👤</span>
+                <img src="${imgSrc}" class="card-img" onerror="this.src='${defaultImg}'">
                 <div class="card-name">${person.name}</div>
+                <div style="font-size:0.8rem; color:#888; margin-top:5px;">${person.position}</div>
             `;
-            div.onclick = () => openModal(person, color);
+            div.onclick = () => openModal(person, color, imgSrc);
             grid.appendChild(div);
         });
 
-        function openModal(p, color) {
+        function openModal(p, color, imgSrc) {
             const modal = document.getElementById('myModal');
             const body = document.getElementById('modalBody');
             modal.children[0].style.borderColor = color;
             body.innerHTML = `
-                <div style="font-size:60px; text-align:center">👤</div>
-                <h2 style="text-align:center; color:${color}">${p.name}</h2>
+                <img src="${imgSrc}" class="modal-img" onerror="this.src='${defaultImg}'">
+                <h2 style="margin:0; color:${color}">${p.name}</h2>
                 <div class="info-box">
+                    <div class="info-item"><label>🏡 名字</label><p>${p.position}</p></div>
                     <div class="info-item"><label>📅 出生日期</label><p>${p.birth}</p></div>
-                    <div class="info-item"><label>🌟 特征</label><p>${p.feature}</p></div>
                     <div class="info-item"><label>🧠 性格</label><p>${p.personality}</p></div>
-                    <div class="info-item"><label>⚡ 超能力</label><p>${p.power}</p></div>
-                    <div class="info-item"><label>🎨 爱好</label><p>${p.hobby}</p></div>
-                    <div class="info-item"><label>💬 座右铭</label><p>"${p.motto}"</p></div>
+                    <div class="info-item"><label>💬 口头禅</label><p>"${p.motto}"</p></div>
                 </div>
             `;
             modal.style.display = 'flex';
